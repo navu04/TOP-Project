@@ -44,9 +44,11 @@ public:
             cin >> name;
             cout << "\n";
 
+            // Keep IDs stable even after shuffling.
             players.push_back(Player(i + 1, name));
         }
 
+        // Everyone pays the same entry fee.
         pot = n * entryFee;
         cout << "\n";
         cout << "  ================================\n";
@@ -58,6 +60,7 @@ public:
     void shufflePlayers() {
         random_device rd;
         mt19937 g(rd());
+        // Randomize pairings before round 1.
         shuffle(players.begin(), players.end(), g);
     }
 
@@ -74,6 +77,7 @@ public:
         cout << "      " << p1.name << " vs " << p2.name
              << " -> Winner: " << winner.name << "\n\n";
 
+        // Track elimination order for final ranking output.
         eliminated.push_back(loser);
         return winner;
     }
@@ -96,12 +100,13 @@ public:
                 if (i + 1 < players.size()) {
                     winners.push_back(playMatch(players[i], players[i + 1]));
                 } else {
-                    // Bye case
+                    // Odd player count: last player advances automatically.
                     cout << "      " << players[i].name << " (BYE)\n\n";
                     winners.push_back(players[i]);
                 }
             }
 
+            // Winners become the next round's player pool.
             players = winners;
             round++;
         }
@@ -129,6 +134,7 @@ public:
         cout << "    " << rank++ << ". " << winner.name << " (CHAMPION)\n";
         cout << "\n";
 
+        // Last eliminated player is the runner-up, so reverse for ranking.
         reverse(eliminated.begin(), eliminated.end());
 
         for (auto &p : eliminated) {
@@ -142,6 +148,7 @@ public:
         cout << "      POT DISTRIBUTION\n";
         cout << "  ================================\n";
         cout << "\n";
+        // Basic winner-takes-all payout.
         cout << "  Total Pot: $" << pot << "\n";
         cout << "  Winner Prize ($" << pot << "): " << winner.name << "\n";
         cout << "\n  ================================\n";
